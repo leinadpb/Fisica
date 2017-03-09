@@ -1,2 +1,2 @@
 # Fisica
-Interaccion entre cargas.
+Interaccion entre cargas eléctricas.
