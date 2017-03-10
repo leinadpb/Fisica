@@ -1,2 +1,117 @@
-<h1>Fisica#index</h1>
-<p>Find me in app/views/fisica/index.html.erb</p>
+
+<div class="header" align="center">
+	<h1>SIMULACION ENTRE CARGAS ELECTRICAS</h1>
+	<p>PROYECTO FINAL DE FISICA III. PROF.: JESUS OLIVERA CABO</p>
+</div>
+
+<div class="big-box"> <!-- Open Big box -->
+
+	<div id="menu">
+		<button onclick="addCharge()" name="btn1" id="btn1">Agregar carga</button>
+		<button onclick="removeCharge()">Remover carga</button>
+		<button onclick="modifyCharge()">Modificar carga</button>
+		<button onclick="start()">Ejecutar</button>
+	</div>
+
+	<div id="container">
+	</div>
+
+	<!--
+	<div id="form">
+		<form>
+			Magnitud: <input type="text" name="magnitud"><br>
+			<input type="submit" value="Submit">
+		</form>
+	</div>
+	-->
+
+	<!-- JavaScript Functions -->
+	<script type="text/javascript">
+
+		//Global stage and layer ---------------------------------------------------------------
+		//Create the stage
+		var stage = new Konva.Stage({
+		  container: 'container',   // id of container <div>
+		  width: 1000,
+		  height: 500
+		});
+		//Create the layer
+		var layer = new Konva.Layer();
+		// ---------------------------------------------------------------------------------------
+
+		stage.add(layer);
+
+		class Carga
+			{
+				constructor(magnitud)
+				{
+					this.magnitud = magnitud;
+				}
+				getMagnitud(){ return this.magnitud; }
+
+				draw()
+				{
+
+					//Create the object
+					var carga = new Konva.Circle({
+						x: stage.getWidth() / 2,
+						y: stage.getHeight() / 2,
+						radius: 20,
+						fill:'blue',
+						stroke: 'black',
+						strokeWidth: 2,
+						draggable: true
+					});
+
+					layer.add(carga);
+					layer.draw();
+				}
+			}
+
+		var cargas = [];
+		var cant_cargas = 0;
+
+		function addCharge()
+		{
+			var magnitud = prompt("Magnitud: ", "");
+
+			if (magnitud != null) 
+			{
+				try {
+				    var x = parseFloat(magnitud);
+				    //Add charge to array
+				    var ob = new Carga(magnitud);
+				    cargas.push(ob);
+				    ob.draw();
+				    cant_cargas++;
+
+				}
+				catch(err) {
+				    window.alert("No se ha podido crear la carga. " + err.message);
+				}
+
+			}
+			else
+			{
+				window.alert("Se necesita la magnitud de la carga para poder crearla.")
+			}
+		}
+		function removeCharge()
+		{
+			window.alert("This function is working correctly!");
+		}
+		function modifyCharge()
+		{
+			window.alert("This function is working correctly!");
+		}
+		function start()
+		{
+			window.alert("This function is working correctly!");
+		}
+		function removeCarga()
+		{
+
+		}
+	</script>
+
+</div> <!-- Close Big box -->
