@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # README
 
 This README would normally document whatever steps are necessary to get the
@@ -22,3 +23,7 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+=======
+# Fisica
+Interaccion entre cargas eléctricas.
+>>>>>>> 9343103e4c73dd0ac34e5aedb0f49da0b359b5a8
