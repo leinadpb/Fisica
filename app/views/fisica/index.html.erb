@@ -16,16 +16,6 @@
 	<div id="container">
 	</div>
 
-	<!--
-	<div id="form">
-		<form>
-			Magnitud: <input type="text" name="magnitud"><br>
-			<input type="submit" value="Submit">
-		</form>
-	</div>
-	-->
-
-	<!-- JavaScript Functions -->
 	<script type="text/javascript">
 
 		//Global stage and layer ---------------------------------------------------------------
@@ -36,79 +26,150 @@
 		  height: 500
 		});
 		//Create the layer
-		var layer = new Konva.Layer();
+		var layer = new Konva.Layer(); //Layer to use
+		var cargas = []; //Almacenar los protones y los electrones en este arreglo de cargas
+		var anims = []; //Aniamciones de las cargas creadas
+		var cant_cargas = 0; //contar la cantidad de cargas que se han ido agregando
+		var cant_protones = 0; //contar la cantidad de protones
+		var cant_electrones = 0; //contar la cantidad de electrones
+		q1 = cargas[0].getCarga();
+		var anim = new Konva.Animation(function(frame) {
+				q1.move({ x: cargas[i].getVelocity() + 1, y: cargas[i].getVelocity() + 1});
+		}, layer);
 		// ---------------------------------------------------------------------------------------
-
 		stage.add(layer);
-
-		class Carga
-			{
-				constructor(magnitud)
-				{
-					this.magnitud = magnitud;
-				}
-				getMagnitud(){ return this.magnitud; }
-
-				draw()
-				{
-
-					//Create the object
-					var carga = new Konva.Circle({
-						x: stage.getWidth() / 2,
-						y: stage.getHeight() / 2,
-						radius: 20,
-						fill:'blue',
-						stroke: 'black',
-						strokeWidth: 2,
-						draggable: true
-					});
-
-					layer.add(carga);
-					layer.draw();
-				}
-			}
-
-		var cargas = [];
-		var cant_cargas = 0;
-
-		function addCharge()
+		/*
+		*    CLASE PROTON
+		*/
+		class Proton
 		{
-			var magnitud = prompt("Magnitud: ", "");
-
-			if (magnitud != null) 
+			//Metodos
+			constructor(magnitud)
 			{
-				try {
-				    var x = parseFloat(magnitud);
-				    //Add charge to array
-				    var ob = new Carga(magnitud);
-				    cargas.push(ob);
-				    ob.draw();
-				    cant_cargas++;
-
-				}
-				catch(err) {
-				    window.alert("No se ha podido crear la carga. " + err.message);
-				}
+				this.magnitud = magnitud;
+				//Create the object
+				this.proton = new Konva.Circle({
+					x: stage.getWidth() / 2,
+					y: stage.getHeight() / 2,
+					radius: 15,
+					fill:'red',
+					stroke: 'black',
+					strokeWidth: 2,
+					draggable: true
+				});
+				this.masa = 0.0000000000000000000000000016726;
+				this.speed = 24
+				this.acceleration = 0;
 
 			}
-			else
+			//getters
+			getMagnitud(){ return this.magnitud; }
+			getCarga(){ return this.proton; }
+			getVelocity(){ return this.velocity; }
+			setVelocity(_velocity){ this.velocity = _velocity; }
+			getAcceleration(){ return this.acceleration; }
+			setAcceleration(_a){ this.acceleration = _a; }
+
+			//Dibujar
+			draw()
 			{
-				window.alert("Se necesita la magnitud de la carga para poder crearla.")
+				layer.add(this.proton);
+				layer.draw();
 			}
 		}
-		function removeCharge()
+
+		/*
+		*    CLASE ELECTRON
+		*/
+		class Electron
 		{
-			window.alert("This function is working correctly!");
-		}
-		function modifyCharge()
-		{
-			window.alert("This function is working correctly!");
+			//Metodos
+			constructor(magnitud)
+			{
+				this.magnitud = magnitud;
+				//Create the object
+				this.electron = new Konva.Circle({
+					x: stage.getWidth() / 3,
+					y: stage.getHeight() / 3,
+					radius: 15,
+					fill:'blue',
+					stroke: 'black',
+					strokeWidth: 2,
+					draggable: true
+				});
+				this.masa = 0.00000000000000000000000000000091;
+				this.speed = 24;
+				this.acceleration = 0;
+
+			}
+			//getters
+			getMagnitud(){ return this.magnitud; }
+			getCarga(){ return this.electron; }
+			getVelocity(){ return this.velocity; }
+			setVelocity(_velocity){ this.velocity = _velocity; }
+			getAcceleration(){ return this.acceleration; }
+			setAcceleration(_a){ this.acceleration = _a; }
+
+			//Dibujar
+			draw()
+			{
+				layer.add(this.electron);
+				layer.draw();
+			}
 		}
 		function start()
 		{
-			window.alert("This function is working correctly!");
+			var  i = 0;
+
+
+			anim.start();
 		}
-		function removeCarga()
+		function addCharge()
+		{
+			var input = prompt("Magnitud: ", "");
+			if(input != null)
+			{
+				try
+				{
+					var magnitud = parseFloat(input);
+					var ob = null;
+					if(magnitud > 0) //crear un proton
+					{
+						ob = new Proton();
+						cargas.push(ob);
+						ob.draw();
+						cant_cargas++;
+						cant_protones++;
+					}
+					else if(magnitud < 0) //crear un electron
+					{
+						ob = new Electron();
+						cargas.push(ob);
+						ob.draw();
+						cant_cargas++;
+						cant_electrones++;
+					}
+					else
+					{
+							window.alert("Debes especificar una magnitud NO nula.");
+					}
+				}
+				catch (e)
+				{
+					window.alert("No se ha podido crear la carga. Error: " + e);
+				}
+			}
+			else
+			{
+					window.alert("La magnitud no puede ser nula.");
+			}
+
+		}
+		function removeCharge()
+		{
+
+		}
+		function modifyCharge()
 		{
 
 		}

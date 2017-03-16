@@ -13,10 +13,12 @@
 /*   CONTAINER   */
 
 #container{
-	background-color:black;
+	background-color:white;
 	width:1000px;
 	height:500px;
 	float:left;
+	border:5px solid black;
+	box-shadow: 0px 0px 20px gray;
 }
 
 
@@ -27,11 +29,11 @@
 	margin: 0.4em;
 }
 #menu button{
-	background-color: #eee; 
-    color: black; 
-    display: block; 
-    padding: 12px; 
-    text-decoration: none; 
+	background-color: #eee;
+    color: black;
+    display: block;
+    padding: 12px;
+    text-decoration: none;
     width:200px;
     margin-bottom: 0.3em;
 }
