@@ -31,7 +31,10 @@
       //GLOBAL VARIABLES
       let campoE = [];
       let diferenciales = [];
-      let Q = 980;
+      let Q = 50000;
+      let hi= 0;
+      let hf = 500;
+      let E = new Konva.Arrow({});
 
       let stage = new Konva.Stage({
           container: 'container2',   // id of container <div>
@@ -44,7 +47,7 @@
       stage.add(layer); //Add layer to stage
 
       let Liney = new Konva.Line({
-          points: [50, 20, 50, 480],
+          points: [50, hi, 50, hf],
           stroke: 'black',
           strokeWidth: 5
       });
@@ -68,11 +71,15 @@
 
       function movePointR()
       {
+          if (E !== null) E.hide();
+
           point.x((point.x() + 5));
           layer.draw();
       }
       function movePointI()
       {
+          if (E !== null) E.hide();
+
           if(point.x() > 50)
           {
               point.x((point.x() - 5));
@@ -86,8 +93,9 @@
       }
       function  movePointTo(x)
       {
+          if (E !== null) E.hide();
           let input = prompt("x position: ", "");
-          if (input != null) {
+          if (input !== null) {
               try {
                   let xpos = parseFloat(input);
                   if(xpos >= 50 && xpos <= 1000) {
@@ -108,29 +116,30 @@
 
           let xdist = point.x() - 50;
 
-          let dq = Q/460.0;
-          let deMag = 0.0
-          let deVec = [];
+          let dq = Q / (hf - hi);
+          let deMag = 0.0;
+
           let ydist = 0.0;
           let r = 0.0;
 
-          let midPointLine = 230;
+          let midPointLine = ((hf - hi)/2);
 
-          //Calcular el E para cada diferencial de carga en la linea infinita
-
-          for(let a = 20; a <= 480; a++)
+          //Calcular el dE para cada diferencial de carga en la linea infinita
+          let k = 0;
+          for(let a = hi; a <= hf; a++)
           {
+              let deVec = [];
               if(a < midPointLine){
                   ydist = midPointLine - a;
                   r = Math.sqrt((ydist * ydist) + (xdist * xdist));
-                  if(xdist > 230)
+                  if(xdist > ((hf - hi)/2))
                     deMag = (dq/(r*r)); //Magnitud del E
                   else
                       deMag = (dq / (xdist * Math.sqrt(xdist*xdist + a*a)));
                   deVec[0] = deMag * (xdist/r);
                   deVec[1] = (-1) * deMag * (ydist/r);
               }
-              else if( a == midPointLine) {
+              else if( a === midPointLine) {
                   ydist = 0;
                   r = xdist;
                   deMag = (dq/(r*r)); //Magnitud del E
@@ -147,28 +156,47 @@
                   deVec[0] = deMag * (xdist/r);
                   deVec[1] = deMag * (ydist/r);
               }
-              diferenciales[a - 20] = deVec;
+              //console.log("dq:  X: " + deVec[0] + "  Y: " + deVec[1]);
+              diferenciales[k] = [deVec[0], deVec[1]];
+              k++;
           }
 
-          //Sumar diferenciales
+          //Sumar componentes de los diferenciales
           let x = 0.0 , y = 0.0;
           for(let i = 0; i < diferenciales.length; i++)
           {
               x = x  + diferenciales[i][0];
-              y = y + diferenciales[i][1];
+              y = y + diferenciales[i][1]
+              //console.log("dq:  X: " + diferenciales[i][0] + "  Y: " + diferenciales[i][0]);
           }
-          campoE[0] = x;
-          campoE[1] = y;
+          campoE[0] = x.toFixed(4);
+          campoE[1] = y.toFixed(4);
 
 
 
-          window.alert("CAMPO ELECTRICO en el punto rojo: \n" +  "X: " + campoE[0] + " Y:" + campoE[1]);
+          //window.alert("CAMPO ELECTRICO en el punto rojo: \n" +  "X: " + campoE[0] + " Y: " + campoE[1]);
           let txt = "";
           for(let i = 0; i < diferenciales.length; i++)
           {
               txt = txt + "de" + (i+1).toString() + " | X: " + diferenciales[i][0].toFixed(4).toString() + " | Y: " + diferenciales[i][1].toFixed(4).toString() + "\n";
           }
-          window.alert(txt);
+          //window.alert(txt);
+
+          E = new Konva.Arrow({
+              x: point.x(),
+              y: (hf - hi)/2,
+              points: [0, 0, campoE[0]*100, 0],
+              pointerLength: 15,
+              pointerWidth : 10,
+              fill: 'green',
+              stroke: 'green',
+              strokeWidth: 5,
+              id:"vector"
+          });
+          window.alert(campoE[0]*400);
+          layer.add(E);
+          layer.draw();
+
       }
 
 
