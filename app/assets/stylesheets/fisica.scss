@@ -50,6 +50,7 @@
   border-radius: 4px;
   width:95%;
   background-color: #2b669a;
+  color:white;
   padding-left: 1em;
   padding-right: 1em;
   padding-top:0.4em;
@@ -67,7 +68,10 @@
 .nav-stacked button:hover
 {
   background-color: #0f0f0f;
-  color: #2e6da4;
+  color: white;
+}
+.menu2{
+  margin-bottom: 10px;
 }
 .page-header{
   padding-left:1.3em;
