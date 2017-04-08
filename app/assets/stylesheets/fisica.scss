@@ -1,0 +1,82 @@
+// Place all the styles related to the fisica controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+/* HEADER */
+.header{
+	background-color:white;
+	padding:0.3em;
+	margin-bottom:0.9em;
+	color:white;
+}
+
+/*   CONTAINER   */
+
+#container{
+	background-color:white;
+	width:900px;
+	height:500px;
+    float:left;
+	border:5px solid black;
+	box-shadow: 0px 0px 5px gray;
+}
+#container2{
+  background-color:white;
+  width:1000px;
+  height:500px;
+  margin-left: 20px;
+
+
+}
+
+
+/* MENU  */
+#menu {
+	width: 150px;
+	float:left;
+	margin: 0.4em;
+}
+
+/* BIG BOX */
+.parent{
+	display:inline-block;
+    margin-bottom: 2.3em;
+}
+.alert{
+  display:none;
+}
+
+.nav-pills > li > button {
+  border-radius: 4px;
+  width:95%;
+  background-color: #2b669a;
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top:0.4em;
+  padding-bottom:0.4em;
+}
+
+/* PARTE 2  PROYECTO */
+.page-header{
+  margin-top: 0px;
+}
+.nav-stacked a
+{
+  color:white;
+}
+.nav-stacked button:hover
+{
+  background-color: #0f0f0f;
+  color: #2e6da4;
+}
+.page-header{
+  padding-left:1.3em;
+}
+.page-header h1
+{
+  color:#2e6da4;
+}
+/* AUTHORS PAGE */
+.navbar-header a{
+  color:white;
+}

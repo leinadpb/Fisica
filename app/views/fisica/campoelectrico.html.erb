@@ -1,0 +1,177 @@
+<!--  CAMPO ELECTRICO DEBIDO A UNA LINEA IUNFINITA UNIFORMEMENTE CARGADO -->
+<!-- MAIN MENU -->
+<div class="header" align="center">
+  <!-- -->
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/fisica/authors">PROYECTO FINAL FISICA III</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="index">Interaccion entre cargas electricas</a></li>
+        <li class="active"><a href="/fisica/index">Campo electrico debido cargas en linea infinita</a></li>
+        <li><a href="/fisica/index">Circuitos eléctricos</a></li>
+      </ul>
+    </div>
+  </nav>
+</div>
+<!-- END MENU -->
+<div class="page-header">
+  <h1><small>Campo eléctrico debido a una línea uniformemente cargada</small></h1>
+</div>
+<!-- KONVA -->
+<div id="container2"></div>
+<button onclick="start()">Start</button>
+<button onclick="movePointR()">Move point right</button>
+<button onclick="movePointI()">Move point left</button>
+<button onclick="movePointTo()">Move point to</button>
+
+  <script type="text/javascript">
+
+      //GLOBAL VARIABLES
+      let campoE = [];
+      let diferenciales = [];
+      let Q = 55.6;
+
+      let stage = new Konva.Stage({
+          container: 'container2',   // id of container <div>
+          width: 1000,
+          height: 500
+      });
+      let layer = new Konva.Layer();
+
+
+      stage.add(layer); //Add layer to stage
+
+      let Liney = new Konva.Line({
+          points: [50, 20, 50, 480],
+          stroke: 'black',
+          strokeWidth: 5
+      });
+      let Linex = new Konva.Line({
+         points: [0, 250, 1000, 250],
+          stroke: 'black',
+          strokeWidth: 5,
+          dash: [33, 10]
+      });
+      let point = new Konva.Circle({
+          x: Math.random() * (stage.getWidth() - 25) + 25,
+          y: 250,
+          radius: 10,
+          fill: 'red',
+      });
+
+      layer.add(Liney);
+      layer.add(Linex);
+      layer.add(point);
+      layer.draw();
+
+      function movePointR()
+      {
+          point.x((point.x() + 5));
+          layer.draw();
+      }
+      function movePointI()
+      {
+          if(point.x() > 50)
+          {
+              point.x((point.x() - 5));
+              layer.draw();
+          }
+          else
+          {
+              window.alert("La position x debe estar en el intervalo [50, 1000].");
+          }
+
+      }
+      function  movePointTo(x)
+      {
+          let input = prompt("x position: ", "");
+          if (input != null) {
+              try {
+                  let xpos = parseFloat(input);
+                  if(xpos >= 50 && xpos <= 1000) {
+                      point.x(xpos);
+                      layer.draw();
+                  }
+                  else
+                  {
+                      window.alert("La position x debe estar en el intervalo [50, 1000].");
+                  }
+              }
+              catch (e) {
+                  window.alert("Elija una position valida. " + e);
+              }
+          }
+      }
+      function start() { //Generar el campo electrico
+          let xdist = point.x() - 50;
+
+          let dq = Q/460.0;
+          let deMag = 0.0
+          let deVec = [];
+
+          let ke = 0.009;
+          let ydist = 0.0;
+          let r = 0.0;
+          let alpha = 0.0;
+          //Calcular el E para cada diferencial de carga en la linea infinita
+          for(let a = 20; a <= 480; a++)
+          {
+              if(a < 250){
+                  ydist = 250 - a;
+                  r = Math.sqrt(Math.sqrt(ydist, 2) + Math.sqrt(xdist, 2), 0.5);
+                  alpha = Math.abs( Math.atan(xdist/r) * (180 / Math.PI));
+                  if ( xdist < 0 && ydist >= 0 ){
+                      alpha = 180 - alpha;
+                  }else if (xdist < 0 && ydist < 0){
+                      alpha = 180 + alpha;
+                  }else if (xdist >= 0 && ydist < 0){
+                      alpha = 360 - alpha;
+                  }
+                  deMag = (dq/(r*r));
+                  deVec[0] = deMag * Math.cos(alpha);
+                  deVec[1] = (-1) * deMag * Math.sin(alpha);
+              }
+              else if( a == 250) {
+                  ydist = 0;
+                  r = xdist;
+                  alpha = 0.0;
+                  deMag = (dq/(r*r));
+                  deVec[0] = deMag * Math.cos(alpha);
+                  deVec[1] = (-1) * deMag * Math.sin(alpha);
+              }
+              else{
+                  ydist = a - 250;
+                  r = Math.sqrt(Math.sqrt(ydist, 2) + Math.sqrt(xdist, 2), 0.5);
+                  alpha = Math.abs( Math.atan(xdist/r) * (180 / Math.PI));
+                  if ( xdist < 0 && ydist >= 0 ){
+                      alpha = 180 - alpha;
+                  }else if (xdist < 0 && ydist < 0){
+                      alpha = 180 + alpha;
+                  }else if (xdist >= 0 && ydist < 0){
+                      alpha = 360 - alpha;
+                  }
+                  deMag = (dq/(r*r));
+                  deVec[0] = deMag * Math.cos(alpha);
+                  deVec[1] = deMag * Math.sin(alpha);
+              }
+              diferenciales[a - 20] = deVec;
+          }
+
+          //Sumar diferenciales
+          let x = 0.0 , y = 0.0;
+          for(let i = 0; i < diferenciales.length; i++)
+          {
+              x = x  + diferenciales[i][0];
+              y = y + diferenciales[i][1];
+          }
+          campoE[0] = x;
+          campoE[1] = y;
+
+          window.alert("CAMPO ELECTRICO en el punto rojo: \n" +  "X: " + campoE[0] + " Y:" + campoE[1]);
+      }
+
+
+
+</script>
