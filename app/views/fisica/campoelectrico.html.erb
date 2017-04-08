@@ -31,7 +31,7 @@
       //GLOBAL VARIABLES
       let campoE = [];
       let diferenciales = [];
-      let Q = 55.6;
+      let Q = 980;
 
       let stage = new Konva.Stage({
           container: 'container2',   // id of container <div>
@@ -105,56 +105,47 @@
           }
       }
       function start() { //Generar el campo electrico
+
           let xdist = point.x() - 50;
 
           let dq = Q/460.0;
           let deMag = 0.0
           let deVec = [];
-
-          let ke = 0.009;
           let ydist = 0.0;
           let r = 0.0;
-          let alpha = 0.0;
+
+          let midPointLine = 230;
+
           //Calcular el E para cada diferencial de carga en la linea infinita
+
           for(let a = 20; a <= 480; a++)
           {
-              if(a < 250){
-                  ydist = 250 - a;
-                  r = Math.sqrt(Math.sqrt(ydist, 2) + Math.sqrt(xdist, 2), 0.5);
-                  alpha = Math.abs( Math.atan(xdist/r) * (180 / Math.PI));
-                  if ( xdist < 0 && ydist >= 0 ){
-                      alpha = 180 - alpha;
-                  }else if (xdist < 0 && ydist < 0){
-                      alpha = 180 + alpha;
-                  }else if (xdist >= 0 && ydist < 0){
-                      alpha = 360 - alpha;
-                  }
-                  deMag = (dq/(r*r));
-                  deVec[0] = deMag * Math.cos(alpha);
-                  deVec[1] = (-1) * deMag * Math.sin(alpha);
+              if(a < midPointLine){
+                  ydist = midPointLine - a;
+                  r = Math.sqrt((ydist * ydist) + (xdist * xdist));
+                  if(xdist > 230)
+                    deMag = (dq/(r*r)); //Magnitud del E
+                  else
+                      deMag = (dq / (xdist * Math.sqrt(xdist*xdist + a*a)));
+                  deVec[0] = deMag * (xdist/r);
+                  deVec[1] = (-1) * deMag * (ydist/r);
               }
-              else if( a == 250) {
+              else if( a == midPointLine) {
                   ydist = 0;
                   r = xdist;
-                  alpha = 0.0;
-                  deMag = (dq/(r*r));
-                  deVec[0] = deMag * Math.cos(alpha);
-                  deVec[1] = (-1) * deMag * Math.sin(alpha);
+                  deMag = (dq/(r*r)); //Magnitud del E
+                  deVec[0] = deMag * (xdist/r);
+                  deVec[1] = deMag * (ydist/r);
               }
               else{
-                  ydist = a - 250;
-                  r = Math.sqrt(Math.sqrt(ydist, 2) + Math.sqrt(xdist, 2), 0.5);
-                  alpha = Math.abs( Math.atan(xdist/r) * (180 / Math.PI));
-                  if ( xdist < 0 && ydist >= 0 ){
-                      alpha = 180 - alpha;
-                  }else if (xdist < 0 && ydist < 0){
-                      alpha = 180 + alpha;
-                  }else if (xdist >= 0 && ydist < 0){
-                      alpha = 360 - alpha;
-                  }
-                  deMag = (dq/(r*r));
-                  deVec[0] = deMag * Math.cos(alpha);
-                  deVec[1] = deMag * Math.sin(alpha);
+                  ydist = a - midPointLine;
+                  r = Math.sqrt((ydist * ydist) + (xdist * xdist));
+                  if(xdist > 230)
+                      deMag = (dq/(r*r)); //Magnitud del E
+                  else
+                      deMag = (dq / (xdist * Math.sqrt(xdist*xdist + ((ydist - midPointLine)*(ydist - midPointLine)))));
+                  deVec[0] = deMag * (xdist/r);
+                  deVec[1] = deMag * (ydist/r);
               }
               diferenciales[a - 20] = deVec;
           }
@@ -169,7 +160,15 @@
           campoE[0] = x;
           campoE[1] = y;
 
+
+
           window.alert("CAMPO ELECTRICO en el punto rojo: \n" +  "X: " + campoE[0] + " Y:" + campoE[1]);
+          let txt = "";
+          for(let i = 0; i < diferenciales.length; i++)
+          {
+              txt = txt + "de" + (i+1).toString() + " | X: " + diferenciales[i][0].toFixed(4).toString() + " | Y: " + diferenciales[i][1].toFixed(4).toString() + "\n";
+          }
+          window.alert(txt);
       }
 
 
