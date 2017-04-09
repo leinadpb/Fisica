@@ -1,4 +1,7 @@
 class FisicaController < ApplicationController
-  def index
+
+  def authors
+    @daniel = Autor.find_by_nombre("Daniel")
+    @users = Autor.all
   end
 end

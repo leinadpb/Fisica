@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   get 'fisica/index'
   get 'fisica/campoelectrico'
   get 'fisica/authors'
+  get 'fisica/circuitos'
 
   root 'fisica#authors'
 

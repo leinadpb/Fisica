@@ -5,11 +5,15 @@
     <div class="container-fluid">
       <div class="navbar-header">
         <a class="navbar-brand" href="/fisica/authors">PROYECTO FINAL FISICA III</a>
+        <!-- <a class="navbar-brand" href="/fisica/authors">PROYECTO FINAL FISICA III</a> -->
       </div>
       <ul class="nav navbar-nav">
-        <li class="active"><a href="fisica#index">Interaccion entre cargas electricas</a></li>
-        <li><a href="/fisica/campoelectrico">Campo electrico debido cargas en linea infinita</a></li>
-        <li><a href="/fisica/index">Circuitos eléctricos</a></li>
+        <li class="active"><%= link_to "Interaccion entre cargas electricas", fisica_index_path %></li>
+        <li>
+          <%= link_to "Campo electrico debido cargas en linea infinita", fisica_campoelectrico_path %>
+          <!-- <li><a href="/fisica/campoelectrico">Campo electrico debido cargas en linea infinita</a></li> -->
+        </li>
+        <li><%= link_to "Circuitos eléctricos", fisica_circuitos_path %></li>
       </ul>
     </div>
   </nav>
