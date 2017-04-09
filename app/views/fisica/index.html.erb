@@ -46,7 +46,7 @@
       //Create the stage
       var stage = new Konva.Stage({
           container: 'container',   // id of container <div>
-          width: 900,
+          width: 1000,
           height: 500
       });
       //Create the layer
@@ -57,7 +57,7 @@
       var cant_protones = 0; //contar la cantidad de protones
       var cant_electrones = 0; //contar la cantidad de electronesq1 = cargas[0].getCarga();
 
-      const K = 0.009;
+      const K = 0.0009;
 
       // ---------------------------------------------------------------------------------------
       stage.add(layer);
@@ -70,9 +70,9 @@
               this.magnitud = magnitud;
               //Create the object
               this.proton = new Konva.Circle({
-                  x: Math.random() * (stage.getWidth() - 18) + 18,
-                  y: Math.random() * (stage.getHeight() - 18) + 18,
-                  radius: 15,
+                  x: stage.getWidth() / 2,
+                  y: stage.getHeight() / 2,
+                  radius: 9,
                   fill: 'red',
                   stroke: 'black',
                   strokeWidth: 2,
@@ -81,7 +81,16 @@
               this.masa = 0.0000091;
               this.acceleration = 0;
               this.speed = [0, 0];
+              this.timeout = true;
 
+          }
+
+          getTimeout() {
+              return this.timeout;
+          }
+
+          setTimeout(bool) {
+              this.timeout = bool;
           }
 
           //getters
@@ -109,7 +118,7 @@
               this.acceleration = _a;
           }
 
-          getMass(){
+          getMass() {
               return this.masa;
           }
 
@@ -118,6 +127,148 @@
               layer.add(this.proton);
               layer.draw();
           }
+      }
+
+      function addDot(x, y) {
+          let line = new Konva.Circle({
+              x: x,
+              y: y,
+              radius: 4,
+              fill: 'yellow',
+              stroke: 'black',
+              strokeWidth: 1,
+              draggable: false
+          });
+
+          layer.add(line);
+          line.cache();
+      }
+
+      function addline(x1, y1, x2, y2, st, col) {
+          let line = new Konva.Line({
+              points: [x1, y1, x2, y2],
+              stroke: col,
+              strokeWidth: st,
+              lineCap: 'round',
+              lineJoin: 'round'
+          });
+
+          layer.add(line);
+      }
+
+      for (let i = 0; i < 500; i = i + 10) {
+          addline(0, i, 1000, i, 0.4, 'blue');
+          layer.draw();
+      }
+
+      for (let i = 0; i < 1000; i = i + 10) {
+          addline(i, 0, i, 500, 0.4, 'blue');
+          layer.draw();
+      }
+
+      class Group {
+
+          constructor(element1, element2) {
+
+              let topX = 0;
+              let topY = 0;
+
+              let topEle;
+              let botEle;
+
+              if (element1.getCarga().x < element2.getCarga().x) {
+                  topX = element1.getCarga().x();
+                  topEle = element1;
+                  botEle = element2
+              } else {
+                  topX = element2.getCarga().x();
+                  topEle = element2;
+                  botEle = element1
+              }
+
+              if (element1.getCarga().y < element2.getCarga().y) {
+                  topY = element1.getCarga().y();
+              } else {
+                  topY = element2.getCarga().y();
+              }
+
+              this.magnitud = element1.getMagnitud() + element2.getMagnitud();
+              this.group = new Konva.Group({
+                  x: topX,
+                  y: topY
+              });
+
+              let proton = new Konva.Circle({
+                  x: 0,
+                  y: Math.abs(topEle.getCarga().y() - botEle.getCarga().y()),
+                  radius: 9,
+                  fill: topEle.getCarga().fill(),
+                  stroke: 'black',
+                  strokeWidth: 2,
+                  draggable: true
+              });
+
+              let electron = new Konva.Circle({
+                  x: Math.abs(topEle.getCarga().x() - botEle.getCarga().x()),
+                  y: 0,
+                  radius: 9,
+                  fill: botEle.getCarga().fill(),
+                  stroke: 'black',
+                  strokeWidth: 2,
+                  draggable: true
+              });
+
+              this.group.add(proton);
+              this.group.add(electron);
+              this.speed = ([element1.getVelocity()[0] + element2.getVelocity()[0], element1.getVelocity()[1] + element2.getVelocity()[1]])
+              console.log(this.speed);
+              this.masa = 0.0000091;
+              this.timeout = true;
+          }
+
+          getTimeout() {
+              return this.timeout;
+          }
+
+          setTimeout(bool) {
+              this.timeout = bool;
+          }
+
+          //getters
+          getMagnitud() {
+              return this.magnitud;
+          }
+
+          getCarga() {
+              return this.group;
+          }
+
+          getVelocity() {
+              return this.speed;
+          }
+
+          setVelocity(_velocity) {
+              this.speed = _velocity;
+          }
+
+          getAcceleration() {
+              return this.acceleration;
+          }
+
+          setAcceleration(_a) {
+              this.acceleration = _a;
+          }
+
+          getMass() {
+              return this.masa;
+          }
+
+          //Dibujar
+          draw(layer) {
+              layer.add(this.group);
+              layer.draw();
+          }
+
       }
 
       /*
@@ -130,9 +281,9 @@
               this.magnitud = magnitud;
               //Create the object
               this.electron = new Konva.Circle({
-                  x: Math.random() * (stage.getWidth() - 18) + 18,
-                  y: Math.random() * (stage.getHeight() - 18) + 18,
-                  radius: 15,
+                  x: stage.getWidth() / 3,
+                  y: stage.getHeight() / 3,
+                  radius: 9,
                   fill: 'blue',
                   stroke: 'black',
                   strokeWidth: 2,
@@ -141,7 +292,16 @@
               this.masa = 0.0000091;
               this.acceleration = 0;
               this.speed = [0, 0];
+              this.timeout = true;
 
+          }
+
+          getTimeout() {
+              return this.timeout;
+          }
+
+          setTimeout(bool) {
+              this.timeout = bool;
           }
 
           //getters
@@ -169,7 +329,7 @@
               this.acceleration = _a;
           }
 
-          getMass(){
+          getMass() {
               return this.masa;
           }
 
@@ -183,6 +343,7 @@
       let anim = new Konva.Animation(function (frame) {
 
           let time = frame.timeDiff;
+          let stoped = false;
 
           for (let i = 0; i < cargas.length; i++) {
 
@@ -191,50 +352,96 @@
               let vx = cargaA.getVelocity()[0];
               let vy = cargaA.getVelocity()[1];
 
-              let velocityX = [];
-              let velocityY = [];
+              let acelerationX = [];
+              let acelerationY = [];
 
 
-              for (let j = 0; j < cargas.length; j++){
-                  if (i != j){
+              for (let j = 0; j < cargas.length; j++) {
+                  if (i != j) {
 
                       let cargaB = cargas[j];
 
                       let x = cargaB.getCarga().x() - cargaA.getCarga().x();
                       let y = (-1 * cargaB.getCarga().y()) - (-1 * cargaA.getCarga().y());
 
-                      let r = Math.sqrt( Math.pow(x, 2) + Math.pow(y, 2) );
-                      let alpha = Math.abs( Math.atan((cargaB.getCarga().y() - cargaA.getCarga().y()) / (cargaB.getCarga().x() - cargaA.getCarga().x())) ) * (180 / Math.PI);
+                      let r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+                      let alpha = Math.abs(Math.atan((cargaB.getCarga().y() - cargaA.getCarga().y()) / (cargaB.getCarga().x() - cargaA.getCarga().x()))) * (180 / Math.PI);
 
-                      if ( x < 0 && y >= 0 ){
+                      if (x < 0 && y >= 0) {
                           alpha = 180 - alpha;
-                      }else if (x < 0 && y < 0){
+                      } else if (x < 0 && y < 0) {
                           alpha = 180 + alpha;
-                      }else if (x >= 0 && y < 0){
+                      } else if (x >= 0 && y < 0) {
                           alpha = 360 - alpha;
                       }
-                      let force = ((cargas[j].getMagnitud() * cargas[i].getMagnitud() * K)/Math.pow(r, 2));
+
+                      let force = 0;
+
+                      force = ((cargas[j].getMagnitud() * cargas[i].getMagnitud() * K) / Math.pow(r, 2));
+                      if (r <= 18) {
+                          stoped = true;
+
+                          cargas.splice(j, 1);
+                          cargas.splice(i, 1);
+
+                          let group = new Group(cargaA, cargaB);
+
+                          cargaA.getCarga().remove();
+                          cargaB.getCarga().remove();
+                          layer.draw();
+
+                          group.draw(layer);
+                          cargas.push(group);
+
+                      } else {
+                          stoped = false;
+                      }
 
                       let forceX = force * Math.cos(alpha * Math.PI / 180);
                       let forceY = force * Math.sin(alpha * Math.PI / 180);
 
-                      let aX = 0 -(forceX/cargaA.getMass());
-                      let aY = forceY/cargaA.getMass();
+                      let aX = 0 - (forceX / cargaA.getMass());
+                      let aY = forceY / cargaA.getMass();
 
-                      vx = vx + (aX * time/1000);
-                      vy = vy + (aY * time/1000);
-
-                      //console.log(aX, aY, vy, vx);
-
+                      acelerationX.push(aX);
+                      acelerationY.push(aY);
                   }
               }
 
-              cargas[i].setVelocity([vx, vy]);
+              if (!stoped) {
+                  let aX = 0;
+                  let aY = 0;
+
+                  for (let i = 0; i < acelerationX.length; i++) {
+                      aX = aX + acelerationX[i];
+                  }
+
+                  for (let i = 0; i < acelerationY.length; i++) {
+                      aY = aY + acelerationY[i];
+                  }
+
+                  vx = vx + (aX * time / 1000);
+                  vy = vy + (aY * time / 1000);
+                  cargas[i].setVelocity([vx, vy]);
+              }
           }
 
-          for (let i = 0; i < cargas.length; i++){
-              cargas[i].getCarga().x(cargas[i].getCarga().x() + cargas[i].getVelocity()[0] * time/1000);
-              cargas[i].getCarga().y(cargas[i].getCarga().y() + cargas[i].getVelocity()[1] * time/1000);
+          for (let i = 0; i < cargas.length; i++) {
+
+              cargas[i].getCarga().x(cargas[i].getCarga().x() + cargas[i].getVelocity()[0] * time / 1000);
+              cargas[i].getCarga().y(cargas[i].getCarga().y() + cargas[i].getVelocity()[1] * time / 1000);
+
+              if (cargas[i].getTimeout()) {
+                  cargas[i].setTimeout(false);
+                  setTimeout(function () {
+                      try {
+                          addDot(cargas[i].getCarga().x(), cargas[i].getCarga().y());
+                          cargas[i].setTimeout(true);
+                      } catch (e) {
+
+                      }
+                  }, 1000)
+              }
           }
 
       }, layer);
@@ -248,7 +455,7 @@
           if (input != null) {
               try {
                   let magnitud = parseFloat(input);
-                  var ob = null;
+                  let ob = null;
                   if (magnitud > 0) //crear un proton
                   {
                       ob = new Proton(magnitud);
@@ -268,6 +475,7 @@
                   else {
                       window.alert("Debes especificar una magnitud NO nula.");
                   }
+                  return ob;
               }
               catch (e) {
                   window.alert("No se ha podido crear la carga. Error: " + e);
@@ -284,6 +492,22 @@
       function modifyCharge() {
 
       }
+
+      let charge12 = addCharge();
+      charge12.getCarga().x(75);
+      charge12.getCarga().y(70);
+
+      let charge22 = addCharge();
+      charge22.getCarga().x(70);
+      charge22.getCarga().y(470);
+
+      let charge32 = addCharge();
+      charge32.getCarga().x(470);
+      charge32.getCarga().y(70);
+
+      layer.draw();
+
+
   </script>
 
 </div> <!-- Close Big box -->
