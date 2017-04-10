@@ -1,5 +1,6 @@
 <!--  CAMPO ELECTRICO DEBIDO A UNA LINEA IUNFINITA UNIFORMEMENTE CARGADO -->
 <!-- MAIN MENU -->
+<div>
 <div class="header" align="center">
   <!-- -->
   <nav class="navbar navbar-inverse">
@@ -11,8 +12,8 @@
       <ul class="nav navbar-nav">
         <li><%= link_to "Interaccion entre cargas electricas", fisica_index_path %></li>
         <li class="active">
-        <%= link_to "Campo electrico debido cargas en linea infinita", fisica_campoelectrico_path %>
-        <!-- <li><a href="/fisica/campoelectrico">Campo electrico debido cargas en linea infinita</a></li> -->
+          <%= link_to "Campo electrico debido cargas en linea infinita", fisica_campoelectrico_path %>
+          <!-- <li><a href="/fisica/campoelectrico">Campo electrico debido cargas en linea infinita</a></li> -->
         </li>
         <li><%= link_to "Circuitos eléctricos", fisica_circuitos_path %></li>
       </ul>
@@ -25,185 +26,252 @@
 </div>
 <!-- KONVA -->
 <div class="btn-group menu2" role="group">
-    <button type="button" onclick="start()" class="btn btn-default">Start</button>
-    <button type="button" onclick="movePointI()" class="btn btn-default">◄ Move point left</button>
-    <button type="button" onclick="movePointR()" class="btn btn-default">Move point right ►</button>
-    <button type="button" onclick="movePointTo()" class="btn btn-default">Move point to</button>
+  <button type="button" onclick="start()" class="btn btn-default">Start</button>
+  <button type="button" onclick="movePointI()" class="btn btn-default">◄ Move point left</button>
+  <button type="button" onclick="movePointR()" class="btn btn-default">Move point right ►</button>
+  <button type="button" onclick="movePointTo()" class="btn btn-default">Move point to</button>
 </div>
 
-<div id="container2"></div>
+  <div id="container2"></div>
 
-  <script type="text/javascript">
+  <div>
+    <script type="text/javascript">
 
-      //GLOBAL VARIABLES
-      let campoE = [];
-      let diferenciales = [];
-      let Q = 50000;
-      let hi= 0;
-      let hf = 500;
-      let E = new Konva.Arrow({});
+        //GLOBAL VARIABLES
+        let campoE = [];
+        let diferenciales = [];
+        let Q = 50000; //Carga de la linea uniformemente cargada
+        let hi= 0;
+        let hf = 500;
+        let E = new Konva.Arrow({});
+        var magnitude = new Konva.Label({});
 
-      let stage = new Konva.Stage({
-          container: 'container2',   // id of container <div>
-          width: 1000,
-          height: 500
-      });
-      let layer = new Konva.Layer();
+        let stage = new Konva.Stage({
+            container: 'container2',   // id of container <div>
+            width: 1000,
+            height: 500
+        });
+        let layer = new Konva.Layer();
 
 
-      stage.add(layer); //Add layer to stage
+        stage.add(layer); //Add layer to stage
 
-      let Liney = new Konva.Line({
-          points: [50, hi, 50, hf],
-          stroke: 'black',
-          strokeWidth: 5
-      });
-      let Linex = new Konva.Line({
-         points: [0, 250, 1000, 250],
-          stroke: 'black',
-          strokeWidth: 5,
-          dash: [33, 10]
-      });
-      let point = new Konva.Circle({
-          x: Math.random() * (stage.getWidth() - 25) + 25,
-          y: 250,
-          radius: 10,
-          fill: 'red',
-      });
+        //Cuadricula
+        function addline(x1, y1, x2, y2, st, col) {
+            let line = new Konva.Line({
+                points: [x1, y1, x2, y2],
+                stroke: col,
+                strokeWidth: st,
+                lineCap: 'round',
+                lineJoin: 'round'
+            });
 
-      layer.add(Liney);
-      layer.add(Linex);
-      layer.add(point);
-      layer.draw();
+            layer.add(line);
+        }
 
-      function movePointR()
-      {
-          if (E !== null) E.hide();
+        for (let i = 0; i < 500; i = i + 10) {
+            addline(0, i, 1000, i, 0.8, 'gray');
+            layer.draw();
+        }
 
-          if(point.x()  < 1000) {
-              point.x((point.x() + 5));
-              layer.draw();
-          }
-      }
-      function movePointI()
-      {
-          if (E !== null) E.hide();
+        for (let i = 0; i < 1000; i = i + 10) {
+            addline(i, 0, i, 500, 0.8, 'gray');
+            layer.draw();
+        }
 
-          if(point.x() > 50)
-          {
-              point.x((point.x() - 5));
-              layer.draw();
-          }
+        let Liney = new Konva.Line({
+            points: [50, hi, 50, hf],
+            stroke: 'red',
+            strokeWidth: 4
+        });
 
-      }
-      function  movePointTo(x)
-      {
-          if (E !== null) E.hide();
-          let input = prompt("x position: ", "");
-          if (input !== null) {
-              try {
-                  let xpos = parseFloat(input);
-                  if(xpos > 50 && xpos < 1000) {
-                      point.x(xpos);
-                      layer.draw();
-                  }
-                  else
-                  {
-                      window.alert("La position x debe estar en el intervalo (50, 1000).");
-                  }
-              }
-              catch (e) {
-                  window.alert("Elija una position valida. " + e);
-              }
-          }
-      }
-      function start() { //Generar el campo electrico
+        //Create xAxis
+        for (let i = 50; i < 1000; i += 30) {
+            var valueX = new Konva.Label({
+                x: i,
+                y: 260,
+                opacity: 0.50
+            });
+            valueX.add(new Konva.Tag({
+                fill: 'white'
+            }));
+            valueX.add(new Konva.Text({
+                text: (i - 50).toString(),
+                fontFamily: 'Calibri',
+                fontSize: 12,
+                padding: 2,
+                fill: 'black'
+            }));
+            // add the labels to layer
+            layer.add(valueX);
+        }
 
-          let xdist = point.x() - 50;
+        let Linex = new Konva.Line({
+            points: [0, 250, 1000, 250],
+            stroke: 'black',
+            strokeWidth: 4,
+            dash: [30, 10]
+        });
+        let point = new Konva.Circle({
+            x: Math.random() * (stage.getWidth() - 25) + 25,
+            y: 250,
+            radius: 12,
+            fill: 'red',
+        });
 
-          let dq = Q / (hf - hi);
-          let deMag = 0.0;
+        layer.add(Liney);
+        layer.add(Linex);
+        layer.add(point);
+        layer.draw();
 
-          let ydist = 0.0;
-          let r = 0.0;
+        function movePointR() {
+            if (E !== null) E.hide();
+            if (magnitude !== null) magnitude.hide();
 
-          let midPointLine = ((hf - hi)/2);
+            if(point.x()  < 1000) {
+                point.x((point.x() + 5));
+                layer.draw();
+            }
+        }
+        function movePointI() {
+            if (E !== null) E.hide();
+            if (magnitude !== null) magnitude.hide();
 
-          //Calcular el dE para cada diferencial de carga en la linea infinita
-          let k = 0;
-          for(let a = hi; a <= hf; a++)
-          {
-              let deVec = [];
-              if(a < midPointLine){
-                  ydist = midPointLine - a;
-                  r = Math.sqrt((ydist * ydist) + (xdist * xdist));
-                  if(xdist > ((hf - hi)/2))
+            if(point.x() > 50) {
+                point.x((point.x() - 5));
+                layer.draw();
+            }
+
+        }
+        function  movePointTo(x) {
+            if (E !== null) E.hide();
+            if (magnitude !== null) magnitude.hide();
+
+            let input = prompt("x position: ", "");
+            if (input !== null) {
+                try {
+                    let xpos = parseFloat(input);
+                    if(xpos > 50 && xpos < 1000) {
+                        point.x(xpos + 60);
+                        layer.draw();
+                    }
+                    else {
+                        window.alert("La position x debe estar en el intervalo (50, 1000).");
+                    }
+                }
+                catch (e) {
+                    window.alert("Elija una position valida. " + e);
+                }
+            }
+        }
+        function start() { //Generar el campo electrico
+
+            let xdist = point.x() - 50;
+
+            let dq = Q / (hf - hi);
+            let deMag = 0.0;
+
+            let ydist = 0.0;
+            let r = 0.0;
+
+            let midPointLine = ((hf - hi)/2);
+
+            //Calcular el dE para cada diferencial de carga en la linea infinita
+            let k = 0;
+            for(let a = hi; a <= hf; a++) {
+                let deVec = [];
+                if(a < midPointLine){
+                    ydist = midPointLine - a;
+                    r = Math.sqrt((ydist * ydist) + (xdist * xdist));
+                    if(xdist > ((hf - hi)/2))
+                        deMag = (dq/(r*r)); //Magnitud del E
+                    else
+                        deMag = (dq / (xdist * Math.sqrt(xdist*xdist + a*a)));
+                    deVec[0] = deMag * (xdist/r);
+                    deVec[1] = (-1) * deMag * (ydist/r);
+                }
+                else if( a === midPointLine) {
+                    ydist = 0;
+                    r = xdist;
                     deMag = (dq/(r*r)); //Magnitud del E
-                  else
-                      deMag = (dq / (xdist * Math.sqrt(xdist*xdist + a*a)));
-                  deVec[0] = deMag * (xdist/r);
-                  deVec[1] = (-1) * deMag * (ydist/r);
-              }
-              else if( a === midPointLine) {
-                  ydist = 0;
-                  r = xdist;
-                  deMag = (dq/(r*r)); //Magnitud del E
-                  deVec[0] = deMag * (xdist/r);
-                  deVec[1] = deMag * (ydist/r);
-              }
-              else{
-                  ydist = a - midPointLine;
-                  r = Math.sqrt((ydist * ydist) + (xdist * xdist));
-                  if(xdist > 230)
-                      deMag = (dq/(r*r)); //Magnitud del E
-                  else
-                      deMag = (dq / (xdist * Math.sqrt(xdist*xdist + ((ydist - midPointLine)*(ydist - midPointLine)))));
-                  deVec[0] = deMag * (xdist/r);
-                  deVec[1] = deMag * (ydist/r);
-              }
-              //console.log("dq:  X: " + deVec[0] + "  Y: " + deVec[1]);
-              diferenciales[k] = [deVec[0], deVec[1]];
-              k++;
-          }
+                    deVec[0] = deMag * (xdist/r);
+                    deVec[1] = deMag * (ydist/r);
+                }
+                else{
+                    ydist = a - midPointLine;
+                    r = Math.sqrt((ydist * ydist) + (xdist * xdist));
+                    if(xdist > 230)
+                        deMag = (dq/(r*r)); //Magnitud del E
+                    else
+                        deMag = (dq / (xdist * Math.sqrt(xdist*xdist + ((ydist - midPointLine)*(ydist - midPointLine)))));
+                    deVec[0] = deMag * (xdist/r);
+                    deVec[1] = deMag * (ydist/r);
+                }
+                //console.log("dq:  X: " + deVec[0] + "  Y: " + deVec[1]);
+                diferenciales[k] = [deVec[0], deVec[1]];
+                k++;
+            }
 
-          //Sumar componentes de los diferenciales
-          let x = 0.0 , y = 0.0;
-          for(let i = 0; i < diferenciales.length; i++)
-          {
-              x = x  + diferenciales[i][0];
-              y = y + diferenciales[i][1]
-              //console.log("dq:  X: " + diferenciales[i][0] + "  Y: " + diferenciales[i][0]);
-          }
-          campoE[0] = x.toFixed(4);
-          campoE[1] = y.toFixed(4);
+            //Sumar componentes de los diferenciales
+            let x = 0.0 , y = 0.0;
+            for(let i = 0; i < diferenciales.length; i++) {
+                x = x  + diferenciales[i][0];
+                y = y + diferenciales[i][1]
+                //console.log("dq:  X: " + diferenciales[i][0] + "  Y: " + diferenciales[i][0]);
+            }
+            campoE[0] = x.toFixed(4);
+            campoE[1] = y.toFixed(4);
 
 
+            //window.alert("CAMPO ELECTRICO en el punto rojo: \n" +  "X: " + campoE[0] + " Y: " + campoE[1]);
+            let txt = "";
+            for(let i = 0; i < diferenciales.length; i++) {
+                txt = txt + "de" + (i+1).toString() + " | X: " + diferenciales[i][0].toFixed(4).toString() + " | Y: " + diferenciales[i][1].toFixed(4).toString() + "\n";
+            }
+            //window.alert(txt);
 
-          //window.alert("CAMPO ELECTRICO en el punto rojo: \n" +  "X: " + campoE[0] + " Y: " + campoE[1]);
-          let txt = "";
-          for(let i = 0; i < diferenciales.length; i++)
-          {
-              txt = txt + "de" + (i+1).toString() + " | X: " + diferenciales[i][0].toFixed(4).toString() + " | Y: " + diferenciales[i][1].toFixed(4).toString() + "\n";
-          }
-          //window.alert(txt);
+            E = new Konva.Arrow({
+                x: point.x(),
+                y: (hf - hi)/2,
+                points: [0, 0, campoE[0]*100, 0],
+                pointerLength: 8,
+                pointerWidth: 5,
+                fill: 'green',
+                stroke: 'green',
+                strokeWidth: 5,
+                id:"vector"
+            });
 
-          E = new Konva.Arrow({
-              x: point.x(),
-              y: (hf - hi)/2,
-              points: [0, 0, campoE[0]*100, 0],
-              pointerLength: 15,
-              pointerWidth : 10,
-              fill: 'green',
-              stroke: 'green',
-              strokeWidth: 5,
-              id:"vector"
-          });
-          window.alert(campoE[0]*400);
-          layer.add(E);
-          layer.draw();
+            magnitude = new Konva.Label({
+                x: point.x() + campoE[0] * 100 + 5,
+                y: 220,
+                opacity: 0.70,
+                id: "magnitude",
 
-      }
+            });
+            magnitude.add(new Konva.Tag({
+                fill: 'white'
+            }));
+            magnitude.add(new Konva.Text({
+                text: "E",
+                fontFamily: 'Calibri',
+                fontSize: 18,
+                padding: 2,
+                fill: 'black',
+                fontStyle: "bold"
+
+            }));
+            // add the labels to layer
+            layer.add(magnitude);
+
+            //window.alert(campoE[0]*400);
+            layer.add(E);
+            layer.draw();
+
+        }
 
 
+    </script>
 
-</script>
+  </div>
+</div>

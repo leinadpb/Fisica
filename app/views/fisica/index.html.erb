@@ -70,8 +70,8 @@
               this.magnitud = magnitud;
               //Create the object
               this.proton = new Konva.Circle({
-                  x: stage.getWidth() / 2,
-                  y: stage.getHeight() / 2,
+                  x: Math.random() * (985 - 15 + 1) + 15,
+                  y: Math.random() * (485 - 15 + 1) + 15,
                   radius: 9,
                   fill: 'red',
                   stroke: 'black',
@@ -129,12 +129,13 @@
           }
       }
 
-      function addDot(x, y) {
+      function addDot(x, y, color) {
+
           let line = new Konva.Circle({
               x: x,
               y: y,
-              radius: 4,
-              fill: 'yellow',
+              radius: 2,
+              fill: color,
               stroke: 'black',
               strokeWidth: 1,
               draggable: false
@@ -157,12 +158,12 @@
       }
 
       for (let i = 0; i < 500; i = i + 10) {
-          addline(0, i, 1000, i, 0.4, 'blue');
+          addline(0, i, 1000, i, 0.8, 'gray');
           layer.draw();
       }
 
       for (let i = 0; i < 1000; i = i + 10) {
-          addline(i, 0, i, 500, 0.4, 'blue');
+          addline(i, 0, i, 500, 0.8, 'gray');
           layer.draw();
       }
 
@@ -179,11 +180,11 @@
               if (element1.getCarga().x < element2.getCarga().x) {
                   topX = element1.getCarga().x();
                   topEle = element1;
-                  botEle = element2
+                  botEle = element2;
               } else {
                   topX = element2.getCarga().x();
                   topEle = element2;
-                  botEle = element1
+                  botEle = element1;
               }
 
               if (element1.getCarga().y < element2.getCarga().y) {
@@ -281,8 +282,8 @@
               this.magnitud = magnitud;
               //Create the object
               this.electron = new Konva.Circle({
-                  x: stage.getWidth() / 3,
-                  y: stage.getHeight() / 3,
+                  x: Math.random() * (985 - 15 + 1) + 15,
+                  y: Math.random() * (485 - 15 + 1) + 15,
                   radius: 9,
                   fill: 'blue',
                   stroke: 'black',
@@ -435,7 +436,7 @@
                   cargas[i].setTimeout(false);
                   setTimeout(function () {
                       try {
-                          addDot(cargas[i].getCarga().x(), cargas[i].getCarga().y());
+                          addDot(cargas[i].getCarga().x(), cargas[i].getCarga().y(), cargas[i].getCarga().fill());
                           cargas[i].setTimeout(true);
                       } catch (e) {
 
@@ -492,18 +493,6 @@
       function modifyCharge() {
 
       }
-
-      let charge12 = addCharge();
-      charge12.getCarga().x(75);
-      charge12.getCarga().y(70);
-
-      let charge22 = addCharge();
-      charge22.getCarga().x(70);
-      charge22.getCarga().y(470);
-
-      let charge32 = addCharge();
-      charge32.getCarga().x(470);
-      charge32.getCarga().y(70);
 
       layer.draw();
 
