@@ -109,8 +109,8 @@
         let Linex = new Konva.Line({
             points: [0, 250, 1000, 250],
             stroke: 'black',
-            strokeWidth: 4,
-            dash: [30, 10]
+            strokeWidth: 4
+            // dash: [30, 10]
         });
         let point = new Konva.Circle({
             x: Math.random() * (stage.getWidth() - 25) + 25,
@@ -151,13 +151,8 @@
             if (input !== null) {
                 try {
                     let xpos = parseFloat(input);
-                    if(xpos > 50 && xpos < 1000) {
-                        point.x(xpos + 60);
-                        layer.draw();
-                    }
-                    else {
-                        window.alert("La position x debe estar en el intervalo (50, 1000).");
-                    }
+                    point.x(xpos + 60);
+                    layer.draw();
                 }
                 catch (e) {
                     window.alert("Elija una position valida. " + e);
