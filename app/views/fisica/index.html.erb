@@ -194,6 +194,7 @@
               }
 
               this.magnitud = element1.getMagnitud() + element2.getMagnitud();
+
               this.group = new Konva.Group({
                   x: topX,
                   y: topY
@@ -206,8 +207,16 @@
                   fill: topEle.getCarga().fill(),
                   stroke: 'black',
                   strokeWidth: 2,
-                  draggable: true
+                  draggable: false
               });
+
+              let color = "";
+              if (Math.abs(element1.getMagnitud()) >= Math.abs(element2.getMagnitud())) {
+                  color = element1.getCarga().fill();
+              }
+              else {
+                  color = element2.getCarga().fill();
+              }
 
               let electron = new Konva.Circle({
                   x: Math.abs(topEle.getCarga().x() - botEle.getCarga().x()),
@@ -216,11 +225,22 @@
                   fill: botEle.getCarga().fill(),
                   stroke: 'black',
                   strokeWidth: 2,
+                  draggable: false
+              });
+
+              this.masterCharge = new Konva.Circle({
+                  x: element1.getCarga().x(),
+                  y: element1.getCarga().y(),
+                  radius: 9,
+                  fill: color,
+                  stroke: 'black',
+                  strokeWidth: 2,
                   draggable: true
               });
 
-              this.group.add(proton);
-              this.group.add(electron);
+              //this.group.add(proton);
+              //this.group.add(electron);
+              //this.group.add();
               this.speed = ([element1.getVelocity()[0] + element2.getVelocity()[0], element1.getVelocity()[1] + element2.getVelocity()[1]])
               console.log(this.speed);
               this.masa = 0.0000091;
@@ -241,7 +261,7 @@
           }
 
           getCarga() {
-              return this.group;
+              return this.masterCharge;
           }
 
           getVelocity() {
@@ -266,7 +286,7 @@
 
           //Dibujar
           draw(layer) {
-              layer.add(this.group);
+              layer.add(this.masterCharge);
               layer.draw();
           }
 
@@ -390,6 +410,8 @@
                           cargaA.getCarga().remove();
                           cargaB.getCarga().remove();
                           layer.draw();
+
+                          anim.stop();
 
                           group.draw(layer);
                           cargas.push(group);
