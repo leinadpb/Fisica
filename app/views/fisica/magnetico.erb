@@ -40,8 +40,9 @@
 
       let layer = new Konva.Layer();
       //Campo magnetico
-      let Bmag = 60.22; //Teslas
+      let Bmag = 6.622; //Teslas
       let Bdir = "cruz"; //Hacia dentro de la pantalla. "punto", hacia fuera de la pantalla.
+      let Fm = [0, 0]; //Fuerza magnetica
 
       let label = new Konva.Label({
           x: 180,
@@ -65,16 +66,25 @@
                   draggable: true
               });
               this.velocity = [0.5, 0];
-
+              this.mass = 0.009;
+              this.charge = 0.167;
           }
 
           getPart() {
               return this.particle;
           }
 
+          getCharge() {
+              return this.charge;
+          }
+
+          getMass() {
+              return this.mass;
+          }
           getSpeed() {
               return this.velocity;
           }
+
 
           //Dibujar
           draw() {
@@ -104,25 +114,37 @@
           let yi = label.y();
           let yf = label.y() + label.getHeight();
 
+          //Radio de curvatura
+          let R = ((part.getMass() * ( Math.pow(part.getSpeed()[0], 2) + Math.pow(part.getSpeed()[1], 2) )) / (part.getCharge() * Bmag));
+
+          if (part.getSpeed()[0] > 0 && Bdir === "cruz") {
+              R = (-1) * R;
+          }
+
           if ((part.getPart().x() >= xi && part.getPart().x() <= xf) && (part.getPart().y() >= yi && part.getPart().y() <= yf)) {
               //Esta en el campo magnetico
-              part.getPart().x(part.getPart().x() + (part.getSpeed()[0] + 2)); //Prueba
+              part.getPart().x(part.getPart().x() + part.getSpeed()[0]); //Prueba
+              part.getPart().y(part.getPart().y() + R);
+              part.getSpeed()[1] += R;
           }
           else {
               //no lo esta
               part.getPart().x(part.getPart().x() + part.getSpeed()[0]); //Prueba
+              part.getPart().y(part.getPart().y() + part.getSpeed()[1]); //
           }
 
           if (part.getPart().x() >= 1190 || part.getPart().y() >= 490 || part.getPart().x() <= 10 || part.getPart().y() <= 10) {
               anim.stop();
           }
 
-
           layer.draw();
 
       });
 
       /*** FUNCTIONS ***/
+      function campoMagnetico() {
+          window.alert()
+      }
       function startAnim() {
           anim.start();
       }
