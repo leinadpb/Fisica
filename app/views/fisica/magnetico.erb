@@ -25,9 +25,11 @@
   </h1>
 </div>
 <!-- KONVA -->
-
+<button onclick="startAnim()">Animate</button>
 <div id="container4">
+
 </div>
+
 
 <div>
   <script type="text/javascript">
@@ -114,12 +116,19 @@
               part.getPart().x(part.getPart().x() + part.getSpeed()[0]); //Prueba
           }
 
+          if (part.getPart().x() >= 1190 || part.getPart().y() >= 490 || part.getPart().x() <= 10 || part.getPart().y() <= 10) {
+              anim.stop();
+          }
+
+
           layer.draw();
 
       });
-      anim.start(); //Start animation
 
       /*** FUNCTIONS ***/
+      function startAnim() {
+          anim.start();
+      }
       function drawCampo(direccion) {
 
           //Dibujar campo B
