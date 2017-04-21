@@ -44,6 +44,14 @@
       let Bmag = 60.22; //Teslas
       let Bdir = "cruz"; //Hacia dentro de la pantalla. "punto", hacia fuera de la pantalla.
 
+      let label = new Konva.Label({
+          x: 180,
+          y: 150,
+          opacity: 0.75,
+          draggable: true,
+      });
+
+      //layer.add(label);
       //END GLOBAL VARIABLES
 
       /*** CLASSES **/
@@ -76,8 +84,6 @@
 
       //Crear campo magnetico
       drawCampo(Bdir);
-      layer.draw();
-
 
       /* Particula */
       let part = new Particle();
@@ -89,8 +95,17 @@
           part.getPart().x(part.getPart().x() + 1); //Prueba
 
           /*** CURVAR SI ENTRA EN EL CAMPO MAGNETICO */
+          let xi = label.x();
+          let xf = label.x() + label.getWidth();
+          let yi = label.y();
+          let yf = label.y() + label.getHeight();
 
-
+          if ((part.getPart().x() >= xi && part.getPart().x() <= xf) && (part.getPart().y() >= yi && part.getPart().y() <= yf)) {
+              //Esta en el campo magnetico
+          }
+          else {
+              //no lo esta
+          }
 
           layer.draw();
 
@@ -101,27 +116,16 @@
       function drawCampo(direccion) {
 
           //Dibujar campo B
-          let label = new Konva.Label({
-              x: 180,
-              y: 150,
-              opacity: 0.75
-          });
 
-          let txt = new Konva.Text({
-              text: '',
-              fontFamily: 'Calibri',
-              fontSize: 18,
-              padding: 5,
-              fill: 'black'
-          });
+          let t = "";
 
           if (direccion === "cruz") {
               //Dibujar cruces uniformes
               for (let i = 1; i < 50; i++) {
                   if (i % 10 === 0) {
-                      txt.text += "\n";
+                      t += "\n";
                   } else {
-                      txt.text += "X     ";
+                      t += "X     ";
                   }
               }
 
@@ -131,17 +135,24 @@
               //Dibujar cruces uniformes
               for (let i = 1; i < 50; i++) {
                   if (i % 10 === 0) {
-                      txt.text += "\n";
+                      t += "\n";
                   } else {
-                      txt.text += "■     ";
+                      t += "■     ";
                   }
               }
           }
-          label.add(txt);
+          label.add(new Konva.Text({
+              text: t,
+              fontFamily: 'Calibri',
+              fontSize: 18,
+              padding: 5,
+              fill: 'black'
+          }));
           layer.add(label);
           layer.draw();
       }
 
+      layer.draw();
   </script>
 
 </div>
