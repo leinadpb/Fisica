@@ -6,16 +6,14 @@
   <nav class="navbar navbar-inverse">
     <div class="container-fluid">
       <div class="navbar-header">
-        <a class="navbar-brand" href="/fisica/authors">PROYECTO FINAL FISICA III</a>
+        <a class="navbar-brand" href="/">PROYECTO FINAL FISICA III</a>
         <!-- <a class="navbar-brand" href="/fisica/authors">PROYECTO FINAL FISICA III</a> -->
       </div>
       <ul class="nav navbar-nav">
-        <li><%= link_to "Interaccion entre cargas electricas", fisica_index_path %></li>
+        <li><a onclick="location.href='/fisica/index'">Interacciones entre cargas</a></li>
         <li class="active">
-          <%= link_to "Campo electrico debido cargas en linea infinita", fisica_campoelectrico_path %>
-          <!-- <li><a href="/fisica/campoelectrico">Campo electrico debido cargas en linea infinita</a></li> -->
-        </li>
-        <li><%= link_to "Campo magnético", fisica_magnetico_path %></li>
+          <a onclick="location.href='/fisica/campoelectrico'">Campo electrico debido cargas en linea infinita</a></li>
+        <li><a onclick="location.href='/fisica/magnetico'">Campo magnético</a></li>
       </ul>
     </div>
   </nav>
@@ -44,9 +42,9 @@
         let hi= 0;
         let hf = 500;
         let E = new Konva.Arrow({});
-        var magnitude = new Konva.Label({});
+        let magnitude = new Konva.Label({});
 
-        let stage = new Konva.Stage({
+        let stage_02 = new Konva.Stage({
             container: 'container2',   // id of container <div>
             width: 1200,
             height: 500
@@ -54,7 +52,7 @@
         let layer = new Konva.Layer();
 
 
-        stage.add(layer); //Add layer to stage
+        stage_02.add(layer); //Add layer to stage_02
 
         //Cuadricula
         function addline(x1, y1, x2, y2, st, col) {
@@ -113,7 +111,7 @@
             // dash: [30, 10]
         });
         let point = new Konva.Circle({
-            x: Math.random() * (stage.getWidth() - 25) + 25,
+            x: Math.random() * (stage_02.getWidth() - 25) + 25,
             y: 250,
             radius: 12,
             fill: 'red',
