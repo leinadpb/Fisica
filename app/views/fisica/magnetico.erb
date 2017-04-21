@@ -22,9 +22,11 @@
   </h1>
 </div>
 <!-- KONVA -->
-
+<button onclick="startAnim()">Animate</button>
 <div id="container4">
+
 </div>
+
 
 <div>
   <script type="text/javascript">
@@ -62,11 +64,16 @@
                   fill: 'red',
                   draggable: true
               });
-              this.velocity = [15, 0];
+              this.velocity = [0.5, 0];
+
           }
 
           getPart() {
               return this.particle;
+          }
+
+          getSpeed() {
+              return this.velocity;
           }
 
           //Dibujar
@@ -89,7 +96,7 @@
       /* ANIMACIN PARTICULA */
       let anim = new Konva.Animation(function (frame) {
 
-          part.getPart().x(part.getPart().x() + 1); //Prueba
+          part.getPart().x(part.getPart().x() + part.getSpeed()[0]); //Prueba
 
           /*** CURVAR SI ENTRA EN EL CAMPO MAGNETICO */
           let xi = label.x();
@@ -99,19 +106,26 @@
 
           if ((part.getPart().x() >= xi && part.getPart().x() <= xf) && (part.getPart().y() >= yi && part.getPart().y() <= yf)) {
               //Esta en el campo magnetico
-              anim.stop();
+              part.getPart().x(part.getPart().x() + (part.getSpeed()[0] + 2)); //Prueba
           }
           else {
               //no lo esta
-              anim.start();
+              part.getPart().x(part.getPart().x() + part.getSpeed()[0]); //Prueba
           }
+
+          if (part.getPart().x() >= 1190 || part.getPart().y() >= 490 || part.getPart().x() <= 10 || part.getPart().y() <= 10) {
+              anim.stop();
+          }
+
 
           layer.draw();
 
       });
-      anim.start(); //Start animation
 
       /*** FUNCTIONS ***/
+      function startAnim() {
+          anim.start();
+      }
       function drawCampo(direccion) {
 
           //Dibujar campo B
