@@ -41,7 +41,7 @@
       let layer = new Konva.Layer();
       //Campo magnetico
       let Bmag = 6.622; //Teslas
-      let Bdir = "cruz"; //Hacia dentro de la pantalla. "punto", hacia fuera de la pantalla.
+      let Bdir = "punto"; //Hacia dentro de la pantalla. "punto", hacia fuera de la pantalla.
       let Fm = [0, 0]; //Fuerza magnetica
 
       let label = new Konva.Label({
@@ -116,7 +116,6 @@
 
           //Radio de curvatura
           let R = ((part.getMass() * ( Math.pow(part.getSpeed()[0], 2) + Math.pow(part.getSpeed()[1], 2) )) / (part.getCharge() * Bmag));
-
           if (part.getSpeed()[0] > 0 && Bdir === "cruz") {
               R = (-1) * R;
           }
@@ -124,11 +123,12 @@
           if ((part.getPart().x() >= xi && part.getPart().x() <= xf) && (part.getPart().y() >= yi && part.getPart().y() <= yf)) {
               //Esta en el campo magnetico
               part.getPart().x(part.getPart().x() + part.getSpeed()[0]); //Prueba
-              part.getPart().y(part.getPart().y() + R);
+              part.getPart().y(part.getPart().y() + part.getSpeed()[1]);
               part.getSpeed()[1] += R;
           }
           else {
               //no lo esta
+
               part.getPart().x(part.getPart().x() + part.getSpeed()[0]); //Prueba
               part.getPart().y(part.getPart().y() + part.getSpeed()[1]); //
           }
