@@ -41,7 +41,7 @@
       let layer = new Konva.Layer();
       //Campo magnetico
       let Bmag = 6.622; //Teslas
-      let Bdir = "punto"; //Hacia dentro de la pantalla. "punto", hacia fuera de la pantalla.
+      let Bdir = "cruz"; //Hacia dentro de la pantalla. "punto", hacia fuera de la pantalla.
       let Fm = [0, 0]; //Fuerza magnetica
 
       let label = new Konva.Label({
@@ -51,7 +51,7 @@
           draggable: true,
       });
 
-      //layer.add(label);
+
       //END GLOBAL VARIABLES
 
       /*** CLASSES **/
@@ -103,6 +103,18 @@
       let part = new Particle();
       part.draw();
 
+      let puntos = [part.getPart().x(), part.getPart().y()];
+      let line = new Konva.Line({
+          points: puntos,
+          stroke: 'darkred',
+          strokeWidth: 2,
+          lineJoin: 'round',
+          lineCap: 'round',
+          tension: 1
+      });
+      layer.add(line);
+
+
       /* ANIMACIN PARTICULA */
       let anim = new Konva.Animation(function (frame) {
 
@@ -137,8 +149,9 @@
               anim.stop();
           }
 
-          layer.draw();
+          line.points(line.points().concat([part.getPart().x(), part.getPart().y()]));
 
+          layer.draw();
       });
 
       /*** FUNCTIONS ***/
