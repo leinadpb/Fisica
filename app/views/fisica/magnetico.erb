@@ -52,6 +52,29 @@
           draggable: true,
       });
 
+      //Cuadricula
+      function addline(x1, y1, x2, y2, st, col) {
+          let line = new Konva.Line({
+              points: [x1, y1, x2, y2],
+              stroke: col,
+              strokeWidth: st,
+              lineCap: 'round',
+              lineJoin: 'round'
+          });
+
+          layer.add(line);
+      }
+
+      for (let i = 0; i < 500; i = i + 10) {
+          addline(0, i, 1200, i, 0.8, 'gray');
+          layer.draw();
+      }
+
+      for (let i = 0; i < 1200; i = i + 10) {
+          addline(i, 0, i, 500, 0.8, 'gray');
+          layer.draw();
+      }
+
 
       //END GLOBAL VARIABLES
 
