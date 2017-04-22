@@ -22,7 +22,11 @@
   </h1>
 </div>
 <!-- KONVA -->
-<button onclick="startAnim()">Animate</button>
+<div class="btn-group menu2" role="group">
+  <button type="button" onclick="startAnim()" class="btn btn-default" id="btnStart">Animate</button>
+  <button type="button" onclick="selectCharge()" class="btn btn-default">Seleccionar carga</button>
+  <button type="button" onclick="selectMagneticField()" class="btn btn-default">Seleccionar campo magnético</button>
+</div>
 <div id="container4">
 
 </div>
@@ -222,6 +226,12 @@
           }));
           layer.add(label);
           layer.draw();
+      }
+      function selectMagneticField() {
+
+      }
+      function selectCharge() {
+          
       }
 
       layer.draw();
