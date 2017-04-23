@@ -24,31 +24,38 @@
 <!-- KONVA -->
 <div class="btn-group menu2" role="group">
   <button type="button" onclick="startAnim()" class="btn btn-default" id="btnStart">Animate</button>
-  <button type="button" onclick="selectCharge()" class="btn btn-default">Seleccionar carga</button>
-  <button type="button" onclick="selectMagneticField()" class="btn btn-default">Seleccionar campo magnético</button>
+  <button type="button" onclick="createMagneticField()" class="btn btn-default" id="btnStart">Crear campo</button>
+  <button type="button" onclick="createCharge()" class="btn btn-default" id="btnStart">Crear particula</button>
 </div>
-<div id="container4">
-
-</div>
-
+<div id="container4"></div>
 
 <div>
   <script type="text/javascript">
 
-      //GLOBAL VARIABLES
+      /*** GLOBAL VARIABLES ***/
       let stage = new Konva.Stage({
           container: 'container4',   // id of container <div>
           width: 1200,
           height: 500
       });
-
       let layer = new Konva.Layer();
+
       //Campo magnetico
-      let Bmag = 0.622; //Teslas
-      let Bdir = "punto"; //Hacia dentro de la pantalla. "punto", hacia fuera de la pantalla.
-      let Fm = [0, 0]; //Fuerza magnetica
+      let Bmag = null, Bdir, Bf = 5, Bc = 10;
 
+      //Proton
+      let mp = 0.009;//270
+      let cargap = 0.167;
 
+      //Electron
+      let me = 0.0009;//910
+      let cargae = -0.16;
+
+      //Positron
+      let mpo = 0.0009;//910
+      let cargapo = 0.16;
+
+      //Para representar el campo magnetico.
       let label = new Konva.Label({
           x: 380,
           y: 200,
@@ -56,7 +63,14 @@
           draggable: true,
       });
 
-      //Cuadricula
+      let part = null; //Particula
+      let line = null; //Trayectoria
+      let R = null; //Radio de giro
+      let angularSpeed = null; //Velocidad en el giro
+
+      /*** END GLOBAL VARIABLES ***/
+
+      //Grid
       function addline(x1, y1, x2, y2, st, col) {
           let line = new Konva.Line({
               points: [x1, y1, x2, y2],
@@ -68,38 +82,51 @@
 
           layer.add(line);
       }
-
       for (let i = 0; i < 500; i = i + 10) {
           addline(0, i, 1200, i, 0.8, 'gray');
           layer.draw();
       }
-
       for (let i = 0; i < 1200; i = i + 10) {
           addline(i, 0, i, 500, 0.8, 'gray');
           layer.draw();
       }
+      //End grid
 
 
-      //END GLOBAL VARIABLES
+      stage.add(layer); //Add layer to stage
 
-      /*** CLASSES **/
+      /*** PARTICLE CLASS **/
       class Particle {
 
-          constructor() {
+          constructor(color, mass, charge, type, vx, vy) {
               this.particle = new Konva.Circle({
                   x: 150,
                   y: 250,
                   radius: 12,
-                  fill: 'red',
-                  draggable: true
+                  fill: color,
+                  draggable: true,
+                  id: 'particle',
+                  offset: {
+                      x: 0,
+                      y: 0
+                  }
               });
-              this.velocity = [0.5, 0];
-              this.mass = 0.009;
-              this.charge = 0.167;
+              this.velocity = [vx, vy];
+              this.mass = mass;
+              this.charge = charge;
+              this.type = type;
+          }
+          draw() {
+              layer.add(this.particle);
+              layer.draw();
           }
 
           getPart() {
               return this.particle;
+          }
+
+          getType() {
+              return this.type;
           }
 
           getCharge() {
@@ -109,129 +136,184 @@
           getMass() {
               return this.mass;
           }
-          getSpeed() {
+
+          getVelocity() {
               return this.velocity;
           }
 
-          //Dibujar
-          draw() {
-              layer.add(this.particle);
-              layer.draw();
-          }
       }
       /*** END **/
 
-      stage.add(layer); //Add layer to stage
-
-      //Crear campo magnetico
-      drawCampo(Bdir);
-
-      /* Particula */
-      let part = new Particle();
-      part.draw();
-
-      //      let puntos = ;
-      let line = new Konva.Line({
-          points: [part.getPart().x(), part.getPart().y()],
-          stroke: 'darkred',
-          strokeWidth: 1.4,
-          lineJoin: 'round',
-          lineCap: 'round',
-          tension: 0.2
-      });
-
-
       /* ANIMACIN PARTICULA */
+
       let anim = new Konva.Animation(function (frame) {
 
-          part.getPart().x(part.getPart().x() + part.getSpeed()[0]); //Prueba
-
+          part.getPart().x(part.getPart().x() + part.getVelocity()[0]); //Prueba
           /*** CURVAR SI ENTRA EN EL CAMPO MAGNETICO */
           let xi = label.x();
           let xf = label.x() + label.getWidth();
           let yi = label.y();
           let yf = label.y() + label.getHeight();
-
           //Radio de curvatura
-          let R = ((part.getMass() * ( Math.pow(part.getSpeed()[0], 2) + Math.pow(part.getSpeed()[1], 2) )) / (part.getCharge() * Bmag));
-          if (part.getSpeed()[0] > 0 && Bdir === "cruz") {
+          let R = ((part.getMass() * ( Math.pow(part.getVelocity()[0], 2) + Math.pow(part.getVelocity()[1], 2) )) / (part.getCharge() * Bmag));
+          if (part.getVelocity()[0] > 0 && Bdir === "cruz") {
               R = (-1) * R;
           }
-
           if ((part.getPart().x() >= xi && part.getPart().x() <= xf) && (part.getPart().y() >= yi && part.getPart().y() <= yf)) {
               //Esta en el campo magnetico
-              part.getPart().x(part.getPart().x() + part.getSpeed()[0]); //Prueba
-              part.getPart().y(part.getPart().y() + part.getSpeed()[1]);
-              part.getSpeed()[1] += R;
+              part.getPart().x(part.getPart().x() + part.getVelocity()[0]); //Prueba
+              part.getPart().y(part.getPart().y() + part.getVelocity()[1]);
+              part.getVelocity()[1] += R;
           }
           else {
               //no lo esta
-
-              part.getPart().x(part.getPart().x() + part.getSpeed()[0]); //Prueba
-              part.getPart().y(part.getPart().y() + part.getSpeed()[1]); //
+              part.getPart().x(part.getPart().x() + part.getVelocity()[0]); //Prueba
+              part.getPart().y(part.getPart().y() + part.getVelocity()[1]); //
           }
-
           if (part.getPart().x() >= 1190 || part.getPart().y() >= 490 || part.getPart().x() <= 10 || part.getPart().y() <= 10) {
               anim.stop();
           }
-
           line.points(line.points().concat([part.getPart().x(), part.getPart().y()]));
-
           layer.draw();
       });
 
       /*** FUNCTIONS ***/
-      function campoMagnetico() {
-          window.alert()
-      }
       function startAnim() {
-          line.points([part.getPart().x(), part.getPart().y()]);
-          layer.add(line);
-          anim.start();
-      }
-      function drawCampo(direccion) {
+          if (part !== null && line !== null && Bmag !== null) {
+              line.points([part.getPart().x(), part.getPart().y()]);
+              layer.add(line);
+              //Radio de curvatura
+              R = ((part.getMass() * ( Math.sqrt(Math.pow(part.getVelocity()[0], 2) + Math.pow(part.getVelocity()[1], 2)) ) ) / (part.getCharge() * Bmag));
 
-          //Dibujar campo B
-
-          let t = "";
-
-          if (direccion === "cruz") {
-              //Dibujar cruces uniformes
-              for (let i = 1; i < 50; i++) {
-                  if (i % 10 === 0) {
-                      t += "\n";
-                  } else {
-                      t += "X     ";
-                  }
-              }
-
+              anim.start();
+          } else {
+              window.alert("Inserte una particula y un campo magnetico.");
           }
-          else {
-              //Dibujar puntos uniformes
-              //Dibujar cruces uniformes
-              for (let i = 1; i < 50; i++) {
-                  if (i % 10 === 0) {
-                      t += "\n";
-                  } else {
-                      t += "■     ";
+
+      }
+      function drawCampo() {
+
+          //Delete previous text
+          let shape = stage.find('#txt');
+          if (shape !== null) shape.destroy();
+
+          let txt = "";
+
+          for (let i = 0; i < Bf; i++) {
+              for (let j = 0; j < Bc; j++) {
+                  if (j < (Bc - 1)) {
+                      if (Bdir === "cruz") {
+                          txt += "X     ";
+                      }
+                      else {
+                          txt += "■    ";
+                      }
+                  }
+                  else {
+                      if (Bdir === "cruz") {
+                          txt += "X";
+                      }
+                      else {
+                          txt += "■";
+                      }
                   }
               }
+              txt += "\n";
           }
           label.add(new Konva.Text({
-              text: t,
+              text: txt,
               fontFamily: 'Calibri',
               fontSize: 18,
               padding: 5,
-              fill: 'black'
+              fill: 'black',
+              fontStyle: 'bold',
+              id: 'txt'
           }));
           layer.add(label);
           layer.draw();
       }
-      function selectMagneticField() {
+      function createMagneticField() {
+          let input = prompt("Magnitud:", "");
+          let create = true;
+
+          if ((input !== null) && (input !== "")) {
+              try {
+                  let magnitud = parseFloat(input);
+                  if (!isNaN(magnitud)) {
+                      if (magnitud <= 0) {
+                          window.alert("La magnitud debe ser mayor que cero.");
+                          create = false;
+                      } else {
+
+                          Bmag = magnitud;
+                          let direccion = prompt("Escriba un punto '.' o una 'x' para representar el sentido del campo: ", "");
+                          if (direccion !== null) {
+                              if (direccion === "x" || direccion === "X") {
+                                  Bdir = "cruz";
+                              }
+                              else if (direccion === ".") {
+                                  Bdir = "punto";
+                              } else {
+                                  window.alert("Direccion no valida.");
+                                  create = false;
+                              }
+                          }
+                      }
+                      if (create) {
+                          drawCampo();
+                      }
+                  } else {
+                      window.alert("Escriba una magnitud valida.");
+                  }
+
+              }
+              catch (e) {
+                  window.alert("Escriba una magnitud valida." + e);
+              }
+          }
 
       }
-      function selectCharge() {
-          
+      function createCharge() {
+          //Delete the previous particle
+          let shape = stage.find('#particle');
+          let shape2 = stage.find('#line');
+          if (shape !== null) shape.destroy();
+          if (shape2 !== null) shape2.destroy();
+
+          let line_color = "darkred";
+          let seguir = true;
+
+          let input = prompt("Introduzca una de las siguientes particulas: \n1) Proton\n2) Electron\n3) Positron");
+          if ((input !== null) && (input !== "")) {
+              if (input === "Proton" || input === "proton" || input === "PROTON") {
+                  part = new Particle("blue", mp, cargap, "proton", 0.5, 0);
+                  line_color = "darkblue";
+              } else if (input === "Electron" || input === "electron" || input === "ELECTRON") {
+                  part = new Particle("red", mp, cargap, "electron", 0.5, 0);
+
+              } else if (input === "Positron" || input === "positron" || input === "POSITRON") {
+                  part = new Particle("green", mp, cargap, "positron", 0.5, 0);
+                  line_color = "darkgreen";
+              } else {
+                  window.alert("No se ha podido crear la particula.");
+                  seguir = false;
+              }
+
+              if (seguir) {
+                  part.draw();
+                  //Create trayectoria
+                  line = new Konva.Line({
+                      points: [part.getPart().x(), part.getPart().y()],
+                      stroke: line_color,
+                      strokeWidth: 1.4,
+                      lineJoin: 'round',
+                      lineCap: 'round',
+                      tension: 0.2,
+                      id: 'line'
+                  });
+              }
+
+          }
       }
 
       layer.draw();
