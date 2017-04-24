@@ -304,14 +304,11 @@
 
       }
 
-      /*
-       *    CLASE ELECTRON
-       */
+      /*** CLASE ELECTRON ***/
       class Electron {
 
           //Metodos
           constructor(magnitud) {
-              this.magnitud = magnitud;
               //Create the object
               this.electron = new Konva.Circle({
                   x: Math.random() * (985 - 15 + 1) + 15,
@@ -320,58 +317,13 @@
                   fill: 'blue',
                   stroke: 'black',
                   strokeWidth: 2,
-                  draggable: true
+
+
               });
-              this.masa = 0.0000091;
-              this.acceleration = 0;
-              this.speed = [0, 0];
-              this.timeout = true;
-
-          }
-
-          getTimeout() {
-              return this.timeout;
-          }
-
-          setTimeout(bool) {
-              this.timeout = bool;
-          }
-
-          //getters
-          getMagnitud() {
-              return this.magnitud;
-          }
-
-          getCarga() {
-              return this.electron;
-          }
-
-          getVelocity() {
-              return this.speed;
-          }
-
-          setVelocity(_velocity) {
-              this.speed = _velocity;
-          }
-
-          getAcceleration() {
-              return this.acceleration;
-          }
-
-          setAcceleration(_a) {
-              this.acceleration = _a;
-          }
-
-          getMass() {
-              return this.masa;
-          }
-
-          //Dibujar
-          draw() {
-              layer.add(this.electron);
-              layer.draw();
           }
       }
+
+
 
       let anim = new Konva.Animation(function (frame) {
 
