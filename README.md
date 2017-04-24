@@ -1,26 +1,13 @@
-<<<<<<< HEAD
+<<<<<<< PROYECTO FINAL DE FISICA III
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+* Ruby version: 2.3.3
+* Rails version: 5.0.2
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
+Simuladores:
+1) Interaccón de cargas eléctricas
+2) Campo eléctrico debido a una línea infinita uniformemente cargada
+3) Trayectoria de una partícula debido a un campo magnético.
 
 * ...
 =======
