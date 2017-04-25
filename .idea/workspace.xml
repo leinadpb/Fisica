@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="89608a50-b696-4e44-a0e7-56e11f00da7e" name="Default" comment="Better performance">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.buildpacks" />
+    <list default="true" id="89608a50-b696-4e44-a0e7-56e11f00da7e" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Procfile" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/.bundle/" />
@@ -809,7 +809,7 @@
       <workItem from="1492811685594" duration="5487000" />
       <workItem from="1493045963623" duration="11035000" />
       <workItem from="1493123233453" duration="431000" />
-      <workItem from="1493131068891" duration="1592000" />
+      <workItem from="1493131068891" duration="2143000" />
     </task>
     <task id="LOCAL-00001" summary="V.6">
       <created>1491671181444</created>
@@ -874,7 +874,14 @@
       <option name="project" value="LOCAL" />
       <updated>1493062316210</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Better performance">
+      <created>1493132705723</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1493132705723</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -883,12 +890,12 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="66782000" />
+    <option name="totallyTimeSpent" value="67333000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1359" y="-11" width="1602" height="912" extended-state="6" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34491634" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34491634" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4642857" sideWeight="0.51846033" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.04182754" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
